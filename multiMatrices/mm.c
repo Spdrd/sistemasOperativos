@@ -15,6 +15,8 @@ A continuación se precentarán las siguientes etapas:
     -Inicializar Matrices
     -Imprimir Si N  es menor a 10
     -Algoritmo Clásico de Multiplicación de matrices
+    -Se crea una variable de tipo struct 
+    -Se asignan valores
 
 */
 
@@ -56,7 +58,12 @@ void imprimirMatriz(int n, double *m1){
     }
 }
 
-void multiMatrices(int n, double *m1, double *m2, double *res){
+void multiMatrices(void *argMM){
+    struct datos_MM *val = (struct datos_MM *) argMM;
+    int n = val->N;
+    double *m1 = val->mA;
+    double *m2 = val->mB;
+    double *res = val->mC;
     for(int i = 0; i<n; i++){
         for(int j = 0; j < n; j++){
             double SumTemp, *pA, *pB;
@@ -105,8 +112,14 @@ int main(int argc, char *argv[]){
     init_matrices(N, mA, mB, mC);
     imprimirMatriz(N, mA);
     imprimirMatriz(N, mB);
+    struct datos_MM *encValores = (struct datos_MM *)malloc(sizeof(struct datos_MM));
+    encValores->N = N;
+    encValores->mA = mA;
+    encValores->mB = mB;
+    encValores->mC = mC;
+    
 
-    multiMatrices(N, mA, mB, mC);
+    multiMatrices(encValores);
     imprimirMatriz(N, mC);
 
 
