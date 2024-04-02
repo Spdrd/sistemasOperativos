@@ -14,6 +14,8 @@ A continuación se precentarán las siguientes etapas:
     -Apuntar a la reserva de memoria de matrices
     -Inicializar Matrices
     -Imprimir Si N  es menor a 10
+    -Algoritmo Clásico de Multiplicación de matrices
+
 */
 
 #include <stdio.h>
@@ -23,34 +25,55 @@ A continuación se precentarán las siguientes etapas:
 
 #define RESERVA (1024*128*64*8)
 
-static double MEM_CHUNK[RESERVA];
+struct datos_MM{
+    int N;
+    int Th;
+    double *mA;
+    double *mB;
+    double *mC;
+};
 
+static double MEM_CHUNK[RESERVA];
+//Rellena las matrices
 void init_matrices(int n, double *m1, double *m2, double *m3){
-    for(int i = 0; i < n; i++){
+    for(int i = 0; i < n*n; i++){
         m1[i] = i * 1.1;
         m2[i] = i * 2.2;
-        m3[i] = i * 3.3;
+        m3[i] = i;
     }
 }
-
+//Imprime las matrices
 void imprimirMatriz(int n, double *m1){
     if(n <= 10){
-        printf("__________________________\n");
-        for(int i = 0; i < n; i++){
-            for(int j = 0; j < n; j++){
-                printf("%4.1f ", m1[i]);
-            }
-            printf("\n");
+        for(int i = 0; i < n*n; i++){
+            if(i%n == 0) printf("\n");
+            printf(" %4.3f ", m1[i]);
         }
-        printf("__________________________\n");
+        printf("\n--------------------------\n");
     }
     else{
         printf("Matriz Muy grande :c \n");
     }
 }
 
+void multiMatrices(int n, double *m1, double *m2, double *res){
+    for(int i = 0; i<n; i++){
+        for(int j = 0; j < n; j++){
+            double SumTemp, *pA, *pB;
+            SumTemp = 0.0;
+            pA = m1 + i*n;
+            pB = m2 + j;
+            for(int k = 0; k < n ; k++, pA++, pB+=n){
+                SumTemp += *pA * *pB;
+            }
+            res[i*n+j] = SumTemp;
+        }
+    }
+}
+
 int main(int argc, char *argv[]){
-    
+    //Verificaciones para los argumentos
+
     if(argc < 2){
         printf("Argumentos insuficientes \n");
         return -1;
@@ -66,18 +89,28 @@ int main(int argc, char *argv[]){
         printf("Tiene que haber como minimo un hilo\n");
         return -1;
     }
+
+    //Imprime los argumentos ingresados
     printf("Dimension Matriz = %d \n", N);
     printf("Numero de hilos = %d\n", Th);
+
+    //Declara y asigna memoria a las matrices
     double *mA, *mB, *mC;
 
     mA = MEM_CHUNK;
     mB = mA + N*N;
     mC = mB + N*N;
 
+    //Se llenan e imprimen las matrices
     init_matrices(N, mA, mB, mC);
     imprimirMatriz(N, mA);
     imprimirMatriz(N, mB);
+
+    multiMatrices(N, mA, mB, mC);
     imprimirMatriz(N, mC);
+
+
+    printf("\nFin del programa \n");
 
     return 0;
 }
