@@ -17,6 +17,9 @@ A continuación se precentarán las siguientes etapas:
     -Algoritmo Clásico de Multiplicación de matrices
     -Se crea una variable de tipo struct 
     -Se asignan valores
+    -Crear un vector de hilos de tamaño Th
+    -Validar Th > 0 y < al numero de cores del CPU
+    -Crear un pool de hilos
 
 */
 
